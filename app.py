@@ -364,7 +364,6 @@ COMPONENT_CSS = """
 </style>
 """
 st.markdown(COMPONENT_CSS, unsafe_allow_html=True)
-    ═══════════════════════════════════════════════════════════════════════ */
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # RECOMMENDATION & INTERACTIVE STYLES
