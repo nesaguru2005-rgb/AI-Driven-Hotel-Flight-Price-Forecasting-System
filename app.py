@@ -182,6 +182,65 @@ MASTER_CSS = """
         from { opacity: 0; transform: translateY(20px); }
         to { opacity: 1; transform: translateY(0); }
     }
+    
+    /* ═══════════════════════════════════════════════════════════════════════
+       MOBILE RESPONSIVE STYLES
+    ═══════════════════════════════════════════════════════════════════════ */
+    
+    /* Mobile First - Base responsive adjustments */
+    @media screen and (max-width: 768px) {
+        /* Sidebar adjustments for mobile */
+        [data-testid="stSidebar"] {
+            min-width: 100% !important;
+            width: 100% !important;
+        }
+        
+        [data-testid="stSidebar"][aria-expanded="true"] {
+            min-width: 100% !important;
+        }
+        
+        /* Main content padding */
+        .main .block-container {
+            padding: 1rem !important;
+            max-width: 100% !important;
+        }
+        
+        /* Stack columns on mobile */
+        [data-testid="column"] {
+            width: 100% !important;
+            flex: 1 1 100% !important;
+            min-width: 100% !important;
+        }
+        
+        /* Reduce chart heights on mobile */
+        .js-plotly-plot {
+            height: 300px !important;
+        }
+        
+        /* Tab adjustments */
+        .stTabs [data-baseweb="tab-list"] {
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        
+        .stTabs [data-baseweb="tab"] {
+            padding: 0.6rem 1rem;
+            font-size: 0.85rem;
+        }
+    }
+    
+    /* Small mobile devices */
+    @media screen and (max-width: 480px) {
+        .main .block-container {
+            padding: 0.5rem !important;
+        }
+        
+        /* Even smaller tabs */
+        .stTabs [data-baseweb="tab"] {
+            padding: 0.5rem 0.8rem;
+            font-size: 0.75rem;
+        }
+    }
 </style>
 """
 st.markdown(MASTER_CSS, unsafe_allow_html=True)
@@ -361,6 +420,97 @@ COMPONENT_CSS = """
     .delta-up { background: #dcfce7; color: #16a34a; }
     .delta-down { background: #fee2e2; color: #dc2626; }
     .delta-neutral { background: #fef3c7; color: #d97706; }
+    
+    /* ═══════════════════════════════════════════════════════════════════════
+       MOBILE RESPONSIVE - COMPONENT STYLES
+    ═══════════════════════════════════════════════════════════════════════ */
+    @media screen and (max-width: 768px) {
+        .hero-container {
+            padding: 1rem 0 1.5rem;
+        }
+        
+        .hero-badge {
+            padding: 0.4rem 1rem;
+            font-size: 0.75rem;
+            margin-bottom: 1rem;
+        }
+        
+        .hero-title {
+            font-size: 2.2rem !important;
+            letter-spacing: -1px;
+        }
+        
+        .hero-subtitle {
+            font-size: 1rem;
+            padding: 0 1rem;
+        }
+        
+        .hero-stats {
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            padding: 0 1rem;
+        }
+        
+        .hero-stat-value {
+            font-size: 1.5rem;
+        }
+        
+        .hero-stat-label {
+            font-size: 0.7rem;
+        }
+        
+        .glass-card {
+            padding: 1rem;
+            border-radius: 16px;
+        }
+        
+        .metric-card {
+            padding: 1rem;
+            border-radius: 16px;
+        }
+        
+        .metric-icon {
+            width: 40px;
+            height: 40px;
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .metric-label {
+            font-size: 0.7rem;
+        }
+        
+        .metric-value {
+            font-size: 1.5rem;
+        }
+        
+        .metric-delta {
+            font-size: 0.7rem;
+            padding: 0.2rem 0.6rem;
+        }
+    }
+    
+    @media screen and (max-width: 480px) {
+        .hero-title {
+            font-size: 1.8rem !important;
+        }
+        
+        .hero-subtitle {
+            font-size: 0.9rem;
+        }
+        
+        .hero-stats {
+            gap: 1rem;
+        }
+        
+        .hero-stat-value {
+            font-size: 1.2rem;
+        }
+        
+        .metric-value {
+            font-size: 1.3rem;
+        }
+    }
 </style>
 """
 st.markdown(COMPONENT_CSS, unsafe_allow_html=True)
@@ -531,6 +681,64 @@ RECOMMENDATION_CSS = """
     .skeleton-text { height: 20px; margin-bottom: 10px; }
     .skeleton-title { height: 40px; width: 60%; margin-bottom: 20px; }
     .skeleton-card { height: 200px; border-radius: 20px; }
+    
+    /* ═══════════════════════════════════════════════════════════════════════
+       MOBILE RESPONSIVE - RECOMMENDATION STYLES
+    ═══════════════════════════════════════════════════════════════════════ */
+    @media screen and (max-width: 768px) {
+        .recommendation-card {
+            padding: 1.5rem;
+        }
+        
+        .rec-icon {
+            font-size: 3rem;
+        }
+        
+        .rec-title {
+            font-size: 1.5rem;
+            letter-spacing: 2px;
+        }
+        
+        .rec-subtitle {
+            font-size: 0.9rem;
+        }
+        
+        .confidence-meter {
+            padding: 0.8rem;
+            margin-top: 1rem;
+        }
+        
+        .confidence-value {
+            font-size: 1rem;
+        }
+        
+        .ai-thinking {
+            padding: 2rem;
+        }
+        
+        .ai-brain {
+            font-size: 3rem;
+        }
+    }
+    
+    @media screen and (max-width: 480px) {
+        .recommendation-card {
+            padding: 1rem;
+        }
+        
+        .rec-icon {
+            font-size: 2.5rem;
+        }
+        
+        .rec-title {
+            font-size: 1.2rem;
+            letter-spacing: 1px;
+        }
+        
+        .rec-subtitle {
+            font-size: 0.8rem;
+        }
+    }
 </style>
 """
 st.markdown(RECOMMENDATION_CSS, unsafe_allow_html=True)
@@ -791,6 +999,113 @@ SIDEBAR_CSS = """
         font-size: 0.85rem;
         padding-top: 2rem;
         border-top: 1px solid rgba(255,255,255,0.1);
+    }
+    
+    /* ═══════════════════════════════════════════════════════════════════════
+       MOBILE RESPONSIVE - SIDEBAR & LAYOUT STYLES
+    ═══════════════════════════════════════════════════════════════════════ */
+    @media screen and (max-width: 768px) {
+        .sidebar-header {
+            padding: 1rem;
+        }
+        
+        .sidebar-logo {
+            font-size: 2rem;
+        }
+        
+        .sidebar-brand {
+            font-size: 1.2rem;
+        }
+        
+        .sidebar-tagline {
+            font-size: 0.7rem;
+        }
+        
+        .insight-card {
+            padding: 1rem;
+            flex-direction: column;
+            text-align: center;
+        }
+        
+        .insight-icon {
+            font-size: 1.2rem;
+        }
+        
+        .insight-title {
+            font-size: 0.85rem;
+        }
+        
+        .insight-text {
+            font-size: 0.8rem;
+        }
+        
+        .feature-card {
+            padding: 1.2rem;
+            border-radius: 16px;
+        }
+        
+        .feature-icon {
+            font-size: 2rem;
+        }
+        
+        .feature-title {
+            font-size: 0.95rem;
+        }
+        
+        .feature-desc {
+            font-size: 0.8rem;
+        }
+        
+        .footer {
+            padding: 2rem 1rem;
+            margin-top: 2rem;
+            border-radius: 16px 16px 0 0;
+        }
+        
+        .footer-brand {
+            font-size: 1.3rem;
+        }
+        
+        .footer-tagline {
+            font-size: 0.85rem;
+            margin-bottom: 1rem;
+        }
+        
+        .footer-tech {
+            gap: 1rem;
+        }
+        
+        .footer-tech-item {
+            font-size: 0.75rem;
+        }
+        
+        .footer-credits {
+            font-size: 0.75rem;
+        }
+    }
+    
+    @media screen and (max-width: 480px) {
+        .feature-card {
+            padding: 1rem;
+        }
+        
+        .feature-icon {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .feature-title {
+            font-size: 0.85rem;
+        }
+        
+        .feature-desc {
+            font-size: 0.75rem;
+        }
+        
+        .footer-tech {
+            flex-direction: column;
+            gap: 0.5rem;
+        }
     }
 </style>
 """
