@@ -1,6 +1,8 @@
+
 """
-AI-Driven Price Forecasting System - Professional Streamlit App
-Enhanced UI/UX with animations, modern design, and improved performance
+🚀 AI-Driven Price Forecasting System - Enterprise Edition
+MNC-Grade UI/UX with Premium Animations & Professional Design
+Built for Puduvai Youth Fest 2026 AI Hackathon
 """
 
 import streamlit as st
@@ -13,403 +15,794 @@ import os
 import time
 from model import PriceForecastingModel
 
-# Page configuration - MUST be first Streamlit command
+# ═══════════════════════════════════════════════════════════════════════════════
+# PAGE CONFIGURATION
+# ═══════════════════════════════════════════════════════════════════════════════
 st.set_page_config(
-    page_title="AI Price Forecaster | Smart Travel Decisions",
-    page_icon="✈️",
+    page_title="PriceWise AI | Smart Travel Forecasting",
+    page_icon="🌐",
     layout="wide",
     initial_sidebar_state="expanded"
 )
 
-# Professional CSS with animations
-CUSTOM_CSS = """
-<style>
-    /* Import Google Fonts */
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-    
-    /* Global Styles */
-    .stApp {
-        font-family: 'Inter', sans-serif;
-    }
-    
-    /* Hide Streamlit branding */
-    #MainMenu {visibility: hidden;}
-    footer {visibility: hidden;}
-    header {visibility: hidden;}
-</style>
-"""
-st.markdown(CUSTOM_CSS, unsafe_allow_html=True)
+# ═══════════════════════════════════════════════════════════════════════════════
+# THEME CONFIGURATION
+# ═══════════════════════════════════════════════════════════════════════════════
+THEME = {
+    "primary": "#6366f1",      # Indigo
+    "secondary": "#8b5cf6",    # Purple
+    "accent": "#06b6d4",       # Cyan
+    "success": "#10b981",      # Emerald
+    "warning": "#f59e0b",      # Amber
+    "danger": "#ef4444",       # Red
+    "dark": "#0f172a",         # Slate 900
+    "light": "#f8fafc",        # Slate 50
+    "card_bg": "rgba(255, 255, 255, 0.95)",
+    "glass_bg": "rgba(255, 255, 255, 0.1)",
+}
 
-# Extended CSS for professional styling
-EXTENDED_CSS = """
+# ═══════════════════════════════════════════════════════════════════════════════
+# MASTER CSS - MNC-GRADE STYLING
+# ═══════════════════════════════════════════════════════════════════════════════
+MASTER_CSS = """
 <style>
-    /* Animated gradient background */
-    .main-header {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-        font-size: 3.5rem;
-        font-weight: 700;
-        text-align: center;
-        margin-bottom: 0.5rem;
-        animation: fadeInDown 1s ease-out;
+    /* ═══════════════════════════════════════════════════════════════════════
+       GOOGLE FONTS IMPORT
+    ═══════════════════════════════════════════════════════════════════════ */
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
+    
+    /* ═══════════════════════════════════════════════════════════════════════
+       ROOT VARIABLES & GLOBAL STYLES
+    ═══════════════════════════════════════════════════════════════════════ */
+    :root {
+        --primary: #6366f1;
+        --primary-dark: #4f46e5;
+        --secondary: #8b5cf6;
+        --accent: #06b6d4;
+        --success: #10b981;
+        --warning: #f59e0b;
+        --danger: #ef4444;
+        --dark: #0f172a;
+        --light: #f8fafc;
+        --gray-100: #f1f5f9;
+        --gray-200: #e2e8f0;
+        --gray-300: #cbd5e1;
+        --gray-400: #94a3b8;
+        --gray-500: #64748b;
+        --gray-600: #475569;
+        --gray-700: #334155;
+        --gray-800: #1e293b;
+        --gradient-primary: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #06b6d4 100%);
+        --gradient-dark: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+        --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+        --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+        --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1);
+        --shadow-glow: 0 0 40px rgba(99, 102, 241, 0.3);
     }
     
-    .sub-header {
-        text-align: center;
-        color: #6b7280;
-        font-size: 1.2rem;
-        margin-bottom: 2rem;
-        animation: fadeInUp 1s ease-out 0.3s both;
+    * {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     }
     
-    /* Keyframe animations */
-    @keyframes fadeInDown {
-        from { opacity: 0; transform: translateY(-30px); }
-        to { opacity: 1; transform: translateY(0); }
+    .stApp {
+        background: linear-gradient(180deg, #f8fafc 0%, #e2e8f0 100%);
     }
     
+    /* Hide Streamlit defaults */
+    #MainMenu, footer, header {visibility: hidden;}
+    .stDeployButton {display: none;}
+    
+    /* ═══════════════════════════════════════════════════════════════════════
+       KEYFRAME ANIMATIONS
+    ═══════════════════════════════════════════════════════════════════════ */
     @keyframes fadeInUp {
-        from { opacity: 0; transform: translateY(30px); }
+        from { opacity: 0; transform: translateY(40px); }
         to { opacity: 1; transform: translateY(0); }
     }
     
-    @keyframes fadeIn {
-        from { opacity: 0; }
-        to { opacity: 1; }
+    @keyframes fadeInDown {
+        from { opacity: 0; transform: translateY(-40px); }
+        to { opacity: 1; transform: translateY(0); }
     }
     
-    @keyframes slideInLeft {
-        from { opacity: 0; transform: translateX(-50px); }
+    @keyframes fadeInLeft {
+        from { opacity: 0; transform: translateX(-40px); }
         to { opacity: 1; transform: translateX(0); }
     }
     
-    @keyframes slideInRight {
-        from { opacity: 0; transform: translateX(50px); }
+    @keyframes fadeInRight {
+        from { opacity: 0; transform: translateX(40px); }
         to { opacity: 1; transform: translateX(0); }
+    }
+    
+    @keyframes scaleIn {
+        from { opacity: 0; transform: scale(0.9); }
+        to { opacity: 1; transform: scale(1); }
+    }
+    
+    @keyframes float {
+        0%, 100% { transform: translateY(0px); }
+        50% { transform: translateY(-10px); }
     }
     
     @keyframes pulse {
-        0%, 100% { transform: scale(1); }
-        50% { transform: scale(1.05); }
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.7; }
     }
     
     @keyframes shimmer {
-        0% { background-position: -200% 0; }
-        100% { background-position: 200% 0; }
+        0% { background-position: -1000px 0; }
+        100% { background-position: 1000px 0; }
+    }
+    
+    @keyframes gradientFlow {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+    
+    @keyframes ripple {
+        0% { transform: scale(0); opacity: 1; }
+        100% { transform: scale(4); opacity: 0; }
     }
     
     @keyframes bounce {
         0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
-        40% { transform: translateY(-10px); }
-        60% { transform: translateY(-5px); }
+        40% { transform: translateY(-15px); }
+        60% { transform: translateY(-7px); }
+    }
+    
+    @keyframes spin {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+    }
+    
+    @keyframes typewriter {
+        from { width: 0; }
+        to { width: 100%; }
+    }
+    
+    @keyframes blink {
+        50% { border-color: transparent; }
     }
     
     @keyframes glow {
-        0%, 100% { box-shadow: 0 0 5px rgba(102, 126, 234, 0.5); }
-        50% { box-shadow: 0 0 20px rgba(102, 126, 234, 0.8); }
+        0%, 100% { box-shadow: 0 0 5px var(--primary), 0 0 10px var(--primary); }
+        50% { box-shadow: 0 0 20px var(--primary), 0 0 30px var(--primary); }
+    }
+    
+    @keyframes slideInFromBottom {
+        0% { transform: translateY(100%); opacity: 0; }
+        100% { transform: translateY(0); opacity: 1; }
+    }
+    
+    @keyframes countUp {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
     }
 </style>
 """
-st.markdown(EXTENDED_CSS, unsafe_allow_html=True)
+st.markdown(MASTER_CSS, unsafe_allow_html=True)
 
-# Card and component styles
+# ═══════════════════════════════════════════════════════════════════════════════
+# COMPONENT STYLES - PREMIUM UI ELEMENTS
+# ═══════════════════════════════════════════════════════════════════════════════
 COMPONENT_CSS = """
 <style>
-    /* Glass morphism cards */
-    .glass-card {
-        background: rgba(255, 255, 255, 0.95);
-        backdrop-filter: blur(10px);
-        border-radius: 20px;
-        padding: 2rem;
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        margin: 1rem 0;
-        animation: fadeIn 0.8s ease-out;
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-    
-    .glass-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
-    }
-    
-    /* Metric cards with gradient */
-    .metric-card {
-        background: linear-gradient(135deg, #f5f7fa 0%, #e4e8eb 100%);
-        border-radius: 16px;
-        padding: 1.5rem;
+    /* ═══════════════════════════════════════════════════════════════════════
+       HERO SECTION
+    ═══════════════════════════════════════════════════════════════════════ */
+    .hero-container {
         text-align: center;
-        animation: slideInUp 0.6s ease-out;
-        transition: all 0.3s ease;
-        border: none;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        padding: 2rem 0 3rem;
+        animation: fadeInDown 1s ease-out;
     }
     
-    .metric-card:hover {
-        transform: scale(1.02);
-        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+    .hero-badge {
+        display: inline-block;
+        background: var(--gradient-primary);
+        background-size: 200% 200%;
+        animation: gradientFlow 3s ease infinite;
+        color: white;
+        padding: 0.5rem 1.5rem;
+        border-radius: 50px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        margin-bottom: 1.5rem;
+        box-shadow: var(--shadow-lg);
     }
     
-    .metric-value {
-        font-size: 2.5rem;
-        font-weight: 700;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    .hero-title {
+        font-family: 'Poppins', sans-serif;
+        font-size: 4rem;
+        font-weight: 800;
+        background: var(--gradient-primary);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
-        margin: 0.5rem 0;
+        background-clip: text;
+        margin: 0;
+        line-height: 1.1;
+        letter-spacing: -2px;
     }
     
-    .metric-label {
-        color: #6b7280;
-        font-size: 0.9rem;
-        font-weight: 500;
+    .hero-subtitle {
+        font-size: 1.3rem;
+        color: var(--gray-500);
+        margin-top: 1rem;
+        font-weight: 400;
+        animation: fadeInUp 1s ease-out 0.3s both;
+    }
+    
+    .hero-stats {
+        display: flex;
+        justify-content: center;
+        gap: 3rem;
+        margin-top: 2rem;
+        animation: fadeInUp 1s ease-out 0.5s both;
+    }
+    
+    .hero-stat {
+        text-align: center;
+    }
+    
+    .hero-stat-value {
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--primary);
+    }
+    
+    .hero-stat-label {
+        font-size: 0.85rem;
+        color: var(--gray-500);
         text-transform: uppercase;
         letter-spacing: 1px;
     }
     
-    .metric-delta {
-        font-size: 1rem;
-        font-weight: 600;
-        padding: 0.3rem 0.8rem;
-        border-radius: 20px;
-        display: inline-block;
-        margin-top: 0.5rem;
+    /* ═══════════════════════════════════════════════════════════════════════
+       GLASSMORPHISM CARDS
+    .glass-card {
+        background: rgba(255, 255, 255, 0.9);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border-radius: 24px;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        box-shadow: var(--shadow-xl);
+        padding: 2rem;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        animation: fadeInUp 0.8s ease-out;
     }
     
-    .delta-positive { background: #fee2e2; color: #dc2626; }
-    .delta-negative { background: #d1fae5; color: #059669; }
-    .delta-neutral { background: #fef3c7; color: #d97706; }
-</style>
-"""
-st.markdown(COMPONENT_CSS, unsafe_allow_html=True)
-
-# Recommendation and button styles
-RECOMMENDATION_CSS = """
-<style>
-    /* Recommendation boxes with animations */
-    .recommendation-box {
-        padding: 2rem;
+    .glass-card:hover {
+        transform: translateY(-8px);
+        box-shadow: var(--shadow-glow), var(--shadow-xl);
+    }
+    
+    /* ═══════════════════════════════════════════════════════════════════════
+       METRIC CARDS - NEUMORPHISM STYLE
+    ═══════════════════════════════════════════════════════════════════════ */
+    .metric-card {
+        background: linear-gradient(145deg, #ffffff, #e6e6e6);
         border-radius: 20px;
-        text-align: center;
-        font-weight: 700;
-        font-size: 1.8rem;
-        margin: 1.5rem 0;
-        animation: pulse 2s infinite, fadeIn 0.8s ease-out;
+        padding: 1.5rem;
+        box-shadow: 5px 5px 15px #d1d1d1, -5px -5px 15px #ffffff;
         transition: all 0.3s ease;
+        animation: scaleIn 0.6s ease-out;
         position: relative;
         overflow: hidden;
     }
     
-    .recommendation-box::before {
+    .metric-card::before {
         content: '';
         position: absolute;
         top: 0;
         left: -100%;
         width: 100%;
         height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-        animation: shimmer 3s infinite;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+        transition: left 0.5s ease;
     }
     
-    .book-now {
-        background: linear-gradient(135deg, #ff6b6b 0%, #ee5a5a 100%);
-        color: white;
-        box-shadow: 0 10px 30px rgba(238, 90, 90, 0.4);
+    .metric-card:hover::before {
+        left: 100%;
     }
     
-    .book-now:hover {
-        box-shadow: 0 15px 40px rgba(238, 90, 90, 0.5);
+    .metric-card:hover {
         transform: scale(1.02);
+        box-shadow: 8px 8px 20px #d1d1d1, -8px -8px 20px #ffffff;
     }
     
-    .wait {
-        background: linear-gradient(135deg, #4ecdc4 0%, #44a08d 100%);
-        color: white;
-        box-shadow: 0 10px 30px rgba(78, 205, 196, 0.4);
+    .metric-icon {
+        width: 50px;
+        height: 50px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
     }
     
-    .wait:hover {
-        box-shadow: 0 15px 40px rgba(78, 205, 196, 0.5);
-        transform: scale(1.02);
-    }
+    .metric-icon-primary { background: linear-gradient(135deg, #6366f1, #8b5cf6); }
+    .metric-icon-success { background: linear-gradient(135deg, #10b981, #34d399); }
+    .metric-icon-warning { background: linear-gradient(135deg, #f59e0b, #fbbf24); }
+    .metric-icon-danger { background: linear-gradient(135deg, #ef4444, #f87171); }
     
-    .neutral {
-        background: linear-gradient(135deg, #ffd93d 0%, #f0c419 100%);
-        color: #1a1a2e;
-        box-shadow: 0 10px 30px rgba(255, 217, 61, 0.4);
-    }
-    
-    /* Confidence badge */
-    .confidence-badge {
-        display: inline-block;
-        padding: 0.4rem 1rem;
-        border-radius: 20px;
-        font-size: 0.85rem;
+    .metric-label {
+        font-size: 0.8rem;
+        color: var(--gray-500);
+        text-transform: uppercase;
+        letter-spacing: 1px;
         font-weight: 600;
-        margin-top: 1rem;
-        animation: bounce 2s infinite;
+        margin-bottom: 0.5rem;
     }
     
-    .confidence-high { background: #d1fae5; color: #059669; }
-    .confidence-medium { background: #fef3c7; color: #d97706; }
-    .confidence-low { background: #fee2e2; color: #dc2626; }
+    .metric-value {
+        font-size: 2.2rem;
+        font-weight: 800;
+        color: var(--dark);
+        line-height: 1;
+        animation: countUp 1s ease-out;
+    }
     
-    /* Feature cards */
+    .metric-delta {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.3rem;
+        padding: 0.3rem 0.8rem;
+        border-radius: 50px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        margin-top: 0.8rem;
+    }
+    
+    .delta-up { background: #dcfce7; color: #16a34a; }
+    .delta-down { background: #fee2e2; color: #dc2626; }
+    .delta-neutral { background: #fef3c7; color: #d97706; }
+</style>
+"""
+st.markdown(COMPONENT_CSS, unsafe_allow_html=True)
+    ═══════════════════════════════════════════════════════════════════════ */
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# RECOMMENDATION & INTERACTIVE STYLES
+# ═══════════════════════════════════════════════════════════════════════════════
+RECOMMENDATION_CSS = """
+<style>
+    /* ═══════════════════════════════════════════════════════════════════════
+       RECOMMENDATION CARDS - PREMIUM DESIGN
+    ═══════════════════════════════════════════════════════════════════════ */
+    .recommendation-container {
+        position: relative;
+        border-radius: 24px;
+        overflow: hidden;
+        animation: scaleIn 0.8s ease-out;
+    }
+    
+    .recommendation-card {
+        padding: 2.5rem;
+        text-align: center;
+        position: relative;
+        z-index: 1;
+    }
+    
+    .recommendation-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: inherit;
+        filter: blur(0);
+        z-index: -1;
+    }
+    
+    .rec-book-now {
+        background: linear-gradient(135deg, #ef4444 0%, #dc2626 50%, #b91c1c 100%);
+        box-shadow: 0 20px 40px rgba(239, 68, 68, 0.4);
+        animation: glow 2s ease-in-out infinite;
+    }
+    
+    .rec-wait {
+        background: linear-gradient(135deg, #10b981 0%, #059669 50%, #047857 100%);
+        box-shadow: 0 20px 40px rgba(16, 185, 129, 0.4);
+    }
+    
+    .rec-monitor {
+        background: linear-gradient(135deg, #f59e0b 0%, #d97706 50%, #b45309 100%);
+        box-shadow: 0 20px 40px rgba(245, 158, 11, 0.4);
+    }
+    
+    .rec-icon {
+        font-size: 4rem;
+        margin-bottom: 1rem;
+        animation: bounce 2s ease infinite;
+        filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2));
+    }
+    
+    .rec-title {
+        font-family: 'Poppins', sans-serif;
+        font-size: 2rem;
+        font-weight: 800;
+        color: white;
+        text-transform: uppercase;
+        letter-spacing: 3px;
+        margin-bottom: 0.5rem;
+        text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    }
+    
+    .rec-subtitle {
+        color: rgba(255,255,255,0.9);
+        font-size: 1rem;
+        font-weight: 500;
+    }
+    
+    .confidence-meter {
+        margin-top: 1.5rem;
+        padding: 1rem;
+        background: rgba(255,255,255,0.15);
+        border-radius: 16px;
+        backdrop-filter: blur(10px);
+    }
+    
+    .confidence-label {
+        color: rgba(255,255,255,0.8);
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 0.5rem;
+    }
+    
+    .confidence-bar {
+        height: 8px;
+        background: rgba(255,255,255,0.2);
+        border-radius: 4px;
+        overflow: hidden;
+    }
+    
+    .confidence-fill {
+        height: 100%;
+        background: white;
+        border-radius: 4px;
+        transition: width 1s ease-out;
+        animation: shimmer 2s infinite;
+    }
+    
+    .confidence-value {
+        color: white;
+        font-size: 1.2rem;
+        font-weight: 700;
+        margin-top: 0.5rem;
+    }
+    
+    /* ═══════════════════════════════════════════════════════════════════════
+       AI THINKING ANIMATION
+    ═══════════════════════════════════════════════════════════════════════ */
+    .ai-thinking {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 3rem;
+        animation: fadeIn 0.5s ease;
+    }
+    
+    .ai-brain {
+        font-size: 4rem;
+        animation: float 2s ease-in-out infinite;
+        margin-bottom: 1.5rem;
+    }
+    
+    .ai-dots {
+        display: flex;
+        gap: 0.5rem;
+    }
+    
+    .ai-dot {
+        width: 12px;
+        height: 12px;
+        background: var(--primary);
+        border-radius: 50%;
+        animation: bounce 1.4s ease-in-out infinite;
+    }
+    
+    .ai-dot:nth-child(1) { animation-delay: 0s; }
+    .ai-dot:nth-child(2) { animation-delay: 0.2s; }
+    .ai-dot:nth-child(3) { animation-delay: 0.4s; }
+    
+    .ai-text {
+        margin-top: 1rem;
+        color: var(--gray-500);
+        font-size: 1rem;
+        animation: pulse 2s ease-in-out infinite;
+    }
+    
+    /* ═══════════════════════════════════════════════════════════════════════
+       SKELETON LOADING
+    ═══════════════════════════════════════════════════════════════════════ */
+    .skeleton {
+        background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+        background-size: 1000px 100%;
+        animation: shimmer 2s infinite;
+        border-radius: 8px;
+    }
+    
+    .skeleton-text { height: 20px; margin-bottom: 10px; }
+    .skeleton-title { height: 40px; width: 60%; margin-bottom: 20px; }
+    .skeleton-card { height: 200px; border-radius: 20px; }
+</style>
+"""
+st.markdown(RECOMMENDATION_CSS, unsafe_allow_html=True)
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# SIDEBAR & NAVIGATION STYLES
+# ═══════════════════════════════════════════════════════════════════════════════
+SIDEBAR_CSS = """
+<style>
+    /* ═══════════════════════════════════════════════════════════════════════
+       PREMIUM SIDEBAR
+    ═══════════════════════════════════════════════════════════════════════ */
+    [data-testid="stSidebar"] {
+        background: var(--gradient-dark);
+        border-right: 1px solid rgba(255,255,255,0.1);
+    }
+    
+    [data-testid="stSidebar"] > div:first-child {
+        padding-top: 2rem;
+    }
+    
+    .sidebar-header {
+        text-align: center;
+        padding: 1.5rem;
+        margin-bottom: 1rem;
+    }
+    
+    .sidebar-logo {
+        font-size: 2.5rem;
+        margin-bottom: 0.5rem;
+        animation: float 3s ease-in-out infinite;
+    }
+    
+    .sidebar-brand {
+        font-family: 'Poppins', sans-serif;
+        font-size: 1.5rem;
+        font-weight: 700;
+        background: var(--gradient-primary);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+    
+    .sidebar-tagline {
+        color: var(--gray-400);
+        font-size: 0.8rem;
+        margin-top: 0.3rem;
+    }
+    
+    .sidebar-section {
+        padding: 1rem 1.5rem;
+        margin: 0.5rem 1rem;
+        background: rgba(255,255,255,0.05);
+        border-radius: 16px;
+        border: 1px solid rgba(255,255,255,0.1);
+    }
+    
+    .sidebar-section-title {
+        color: var(--gray-400);
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        margin-bottom: 1rem;
+        font-weight: 600;
+    }
+    
+    [data-testid="stSidebar"] label {
+        color: #e2e8f0 !important;
+        font-weight: 500;
+    }
+    
+    [data-testid="stSidebar"] .stSelectbox > div > div {
+        background: rgba(255,255,255,0.1);
+        border: 1px solid rgba(255,255,255,0.2);
+        border-radius: 12px;
+        color: white;
+    }
+    
+    [data-testid="stSidebar"] .stSlider > div > div > div {
+        background: var(--primary);
+    }
+    
+    /* ═══════════════════════════════════════════════════════════════════════
+       INSIGHT CARDS
+    ═══════════════════════════════════════════════════════════════════════ */
+    .insight-card {
+        background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(139, 92, 246, 0.1));
+        border: 1px solid rgba(99, 102, 241, 0.2);
+        border-radius: 16px;
+        padding: 1.2rem;
+        margin: 0.8rem 0;
+        display: flex;
+        align-items: flex-start;
+        gap: 1rem;
+        animation: fadeInLeft 0.6s ease-out;
+        transition: all 0.3s ease;
+    }
+    
+    .insight-card:hover {
+        transform: translateX(5px);
+        border-color: var(--primary);
+        box-shadow: 0 4px 20px rgba(99, 102, 241, 0.2);
+    }
+    
+    .insight-icon {
+        font-size: 1.5rem;
+        flex-shrink: 0;
+    }
+    
+    .insight-content {
+        flex: 1;
+    }
+    
+    .insight-title {
+        font-weight: 600;
+        color: var(--dark);
+        font-size: 0.95rem;
+        margin-bottom: 0.3rem;
+    }
+    
+    .insight-text {
+        color: var(--gray-500);
+        font-size: 0.85rem;
+        line-height: 1.5;
+    }
+    
+    /* ═══════════════════════════════════════════════════════════════════════
+       FEATURE CARDS
+    ═══════════════════════════════════════════════════════════════════════ */
+    .feature-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1.5rem;
+        margin: 2rem 0;
+    }
+    
     .feature-card {
         background: white;
-        border-radius: 16px;
-        padding: 1.5rem;
+        border-radius: 20px;
+        padding: 2rem;
         text-align: center;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-        transition: all 0.3s ease;
-        border: 1px solid #f0f0f0;
+        box-shadow: var(--shadow-md);
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        border: 1px solid var(--gray-100);
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .feature-card::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 4px;
+        background: var(--gradient-primary);
+        transform: scaleX(0);
+        transition: transform 0.3s ease;
+    }
+    
+    .feature-card:hover::after {
+        transform: scaleX(1);
     }
     
     .feature-card:hover {
-        transform: translateY(-8px);
-        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+        transform: translateY(-10px);
+        box-shadow: var(--shadow-xl);
     }
     
     .feature-icon {
         font-size: 3rem;
         margin-bottom: 1rem;
-        animation: bounce 3s infinite;
+        display: block;
     }
     
     .feature-title {
+        font-weight: 700;
+        color: var(--dark);
         font-size: 1.1rem;
-        font-weight: 600;
-        color: #1a1a2e;
         margin-bottom: 0.5rem;
     }
     
     .feature-desc {
-        color: #6b7280;
+        color: var(--gray-500);
         font-size: 0.9rem;
-    }
-</style>
-"""
-st.markdown(RECOMMENDATION_CSS, unsafe_allow_html=True)
-
-# Sidebar and additional styles
-SIDEBAR_CSS = """
-<style>
-    /* Sidebar styling */
-    [data-testid="stSidebar"] {
-        background: linear-gradient(180deg, #1a1a2e 0%, #16213e 100%);
+        line-height: 1.6;
     }
     
-    [data-testid="stSidebar"] .stMarkdown {
-        color: white;
-    }
-    
-    [data-testid="stSidebar"] label {
-        color: #e0e0e0 !important;
-    }
-    
-    /* Stats row */
-    .stats-row {
-        display: flex;
-        justify-content: space-around;
-        gap: 1rem;
-        margin: 2rem 0;
-        animation: fadeIn 1s ease-out;
-    }
-    
-    .stat-item {
-        text-align: center;
-        padding: 1rem;
-    }
-    
-    .stat-number {
-        font-size: 2rem;
-        font-weight: 700;
-        color: #667eea;
-    }
-    
-    .stat-label {
-        color: #6b7280;
-        font-size: 0.85rem;
-    }
-    
-    /* Loading animation */
-    .loading-container {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        padding: 3rem;
-    }
-    
-    .loading-spinner {
-        width: 50px;
-        height: 50px;
-        border: 4px solid #f3f3f3;
-        border-top: 4px solid #667eea;
-        border-radius: 50%;
-        animation: spin 1s linear infinite;
-    }
-    
-    @keyframes spin {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
-    }
-    
-    /* Insight cards */
-    .insight-card {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-        border-radius: 16px;
-        padding: 1.5rem;
-        margin: 0.5rem 0;
-        animation: slideInLeft 0.6s ease-out;
-    }
-    
-    .insight-icon { font-size: 1.5rem; margin-right: 0.5rem; }
-    .insight-text { font-size: 0.95rem; }
-    
-    /* Footer */
-    .footer {
-        text-align: center;
-        padding: 2rem;
-        color: #6b7280;
-        border-top: 1px solid #e5e7eb;
-        margin-top: 3rem;
-        animation: fadeIn 1s ease-out;
-    }
-    
-    .footer-brand {
-        font-size: 1.2rem;
-        font-weight: 600;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-    }
-    
-    /* Tabs styling */
+    /* ═══════════════════════════════════════════════════════════════════════
+       TABS STYLING
+    ═══════════════════════════════════════════════════════════════════════ */
     .stTabs [data-baseweb="tab-list"] {
-        gap: 8px;
+        gap: 0;
+        background: var(--gray-100);
+        border-radius: 16px;
+        padding: 0.5rem;
     }
     
     .stTabs [data-baseweb="tab"] {
-        border-radius: 10px;
-        padding: 10px 20px;
-        background: #f5f7fa;
+        border-radius: 12px;
+        padding: 0.8rem 1.5rem;
+        font-weight: 600;
+        color: var(--gray-500);
+        transition: all 0.3s ease;
     }
     
     .stTabs [aria-selected="true"] {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
+        background: white;
+        color: var(--primary);
+        box-shadow: var(--shadow-md);
+    }
+    
+    /* ═══════════════════════════════════════════════════════════════════════
+       FOOTER
+    ═══════════════════════════════════════════════════════════════════════ */
+    .footer {
+        text-align: center;
+        padding: 3rem 2rem;
+        margin-top: 4rem;
+        background: var(--gradient-dark);
+        border-radius: 24px 24px 0 0;
+        animation: slideInFromBottom 1s ease-out;
+    }
+    
+    .footer-brand {
+        font-family: 'Poppins', sans-serif;
+        font-size: 1.8rem;
+        font-weight: 700;
+        background: var(--gradient-primary);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 1rem;
+    }
+    
+    .footer-tagline {
+        color: var(--gray-400);
+        font-size: 1rem;
+        margin-bottom: 2rem;
+    }
+    
+    .footer-tech {
+        display: flex;
+        justify-content: center;
+        gap: 2rem;
+        flex-wrap: wrap;
+        margin-bottom: 2rem;
+    }
+    
+    .footer-tech-item {
+        color: var(--gray-400);
+        font-size: 0.9rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    
+    .footer-credits {
+        color: var(--gray-500);
+        font-size: 0.85rem;
+        padding-top: 2rem;
+        border-top: 1px solid rgba(255,255,255,0.1);
     }
 </style>
 """
 st.markdown(SIDEBAR_CSS, unsafe_allow_html=True)
 
-# Caching functions for performance
-@st.cache_data(ttl=3600)
+# ═══════════════════════════════════════════════════════════════════════════════
+# PERFORMANCE OPTIMIZED DATA LOADING
+# ═══════════════════════════════════════════════════════════════════════════════
+@st.cache_data(ttl=3600, show_spinner=False)
 def load_data():
-    """Load historical data with caching for performance"""
+    """Load and cache historical data for optimal performance"""
     try:
         hotel_data = pd.read_csv('data/hotel_prices.csv')
         flight_data = pd.read_csv('data/flight_prices.csv')
@@ -419,9 +812,9 @@ def load_data():
     except FileNotFoundError:
         return None, None
 
-@st.cache_resource
+@st.cache_resource(show_spinner=False)
 def load_models():
-    """Load trained models with caching"""
+    """Load and cache ML models"""
     try:
         hotel_model = PriceForecastingModel('hotel')
         hotel_model.load_model('models/hotel_model.pkl')
@@ -431,73 +824,148 @@ def load_models():
     except FileNotFoundError:
         return None, None
 
-def create_animated_chart(dates, prices, title, current_price=None, chart_type="forecast"):
-    """Create professional animated Plotly chart"""
+# ═══════════════════════════════════════════════════════════════════════════════
+# PREMIUM CHART FUNCTIONS
+# ═══════════════════════════════════════════════════════════════════════════════
+def create_premium_forecast_chart(dates, prices, current_price, title):
+    """Create MNC-grade animated forecast chart"""
+    
     fig = go.Figure()
     
-    # Color scheme
-    primary_color = '#667eea'
-    secondary_color = '#764ba2'
-    gradient_colors = ['#667eea', '#764ba2', '#f093fb']
+    # Gradient area fill
+    fig.add_trace(go.Scatter(
+        x=dates, y=prices,
+        fill='tozeroy',
+        fillcolor='rgba(99, 102, 241, 0.1)',
+        line=dict(width=0),
+        showlegend=False,
+        hoverinfo='skip'
+    ))
     
-    if chart_type == "forecast":
-        # Add gradient fill area
-        fig.add_trace(go.Scatter(
-            x=dates, y=prices,
-            fill='tozeroy',
-            fillcolor='rgba(102, 126, 234, 0.1)',
-            line=dict(color=primary_color, width=0),
-            showlegend=False,
-            hoverinfo='skip'
-        ))
-        
-        # Main line with markers
-        fig.add_trace(go.Scatter(
-            x=dates, y=prices,
-            mode='lines+markers',
-            name='Predicted Price',
-            line=dict(color=primary_color, width=4, shape='spline'),
-            marker=dict(size=12, color=primary_color, 
-                       line=dict(width=3, color='white'),
-                       symbol='circle'),
-            hovertemplate='<b>%{x|%b %d}</b><br>Price: $%{y:.2f}<extra></extra>'
-        ))
-        
-        # Current price reference line
-        if current_price:
-            fig.add_hline(
-                y=current_price,
-                line_dash="dash",
-                line_color="#ef4444",
-                line_width=2,
-                annotation_text=f"Current: ${current_price:.2f}",
-                annotation_position="right",
-                annotation_font=dict(size=12, color="#ef4444")
-            )
-    else:
-        # Historical chart with gradient
-        fig.add_trace(go.Scatter(
-            x=dates, y=prices,
-            fill='tozeroy',
-            fillcolor='rgba(118, 75, 162, 0.1)',
-            line=dict(color=secondary_color, width=3, shape='spline'),
-            name='Historical Price',
-            hovertemplate='<b>%{x|%b %d, %Y}</b><br>Price: $%{y:.2f}<extra></extra>'
-        ))
+    # Main forecast line
+    fig.add_trace(go.Scatter(
+        x=dates, y=prices,
+        mode='lines+markers',
+        name='Predicted Price',
+        line=dict(
+            color='#6366f1',
+            width=4,
+            shape='spline',
+            smoothing=1.3
+        ),
+        marker=dict(
+            size=12,
+            color='#6366f1',
+            line=dict(width=3, color='white'),
+            symbol='circle'
+        ),
+        hovertemplate='<b>%{x|%b %d, %Y}</b><br>💰 $%{y:.2f}<extra></extra>'
+    ))
     
-    # Layout with animations
+    # Current price reference
+    if current_price:
+        fig.add_hline(
+            y=current_price,
+            line_dash="dash",
+            line_color="#ef4444",
+            line_width=2,
+            annotation_text=f"Current: ${current_price:.2f}",
+            annotation_position="right",
+            annotation_font=dict(size=12, color="#ef4444", family="Inter")
+        )
+    
+    # Min/Max markers
+    min_idx = prices.index(min(prices)) if isinstance(prices, list) else np.argmin(prices)
+    max_idx = prices.index(max(prices)) if isinstance(prices, list) else np.argmax(prices)
+    
+    fig.add_annotation(
+        x=dates[min_idx], y=min(prices),
+        text=f"Lowest<br>${min(prices):.0f}",
+        showarrow=True, arrowhead=2, arrowcolor="#10b981",
+        font=dict(color="#10b981", size=11),
+        bgcolor="white", bordercolor="#10b981", borderwidth=1
+    )
+    
+    fig.add_annotation(
+        x=dates[max_idx], y=max(prices),
+        text=f"Highest<br>${max(prices):.0f}",
+        showarrow=True, arrowhead=2, arrowcolor="#ef4444",
+        font=dict(color="#ef4444", size=11),
+        bgcolor="white", bordercolor="#ef4444", borderwidth=1
+    )
+    
     fig.update_layout(
-        title=dict(text=title, font=dict(size=20, color='#1a1a2e'), x=0.5),
+        title=dict(
+            text=f"<b>{title}</b>",
+            font=dict(size=20, color='#0f172a', family='Poppins'),
+            x=0.5
+        ),
         xaxis=dict(
-            title="Date", showgrid=True, gridcolor='rgba(0,0,0,0.05)',
-            tickfont=dict(size=11), title_font=dict(size=13)
+            title="Date",
+            showgrid=True,
+            gridcolor='rgba(0,0,0,0.05)',
+            tickfont=dict(size=11, family='Inter'),
+            title_font=dict(size=13, family='Inter')
         ),
         yaxis=dict(
-            title="Price ($)", showgrid=True, gridcolor='rgba(0,0,0,0.05)',
-            tickfont=dict(size=11), title_font=dict(size=13),
+            title="Price (USD)",
+            showgrid=True,
+            gridcolor='rgba(0,0,0,0.05)',
+            tickfont=dict(size=11, family='Inter'),
+            title_font=dict(size=13, family='Inter'),
             tickprefix="$"
         ),
         hovermode='x unified',
+        plot_bgcolor='rgba(0,0,0,0)',
+        paper_bgcolor='rgba(0,0,0,0)',
+        height=450,
+        margin=dict(l=60, r=40, t=80, b=60),
+        legend=dict(
+            orientation="h",
+            yanchor="bottom",
+            y=1.02,
+            xanchor="right",
+            x=1,
+            font=dict(size=12)
+        )
+    )
+    
+    # Add animation
+    fig.update_traces(
+        selector=dict(mode='lines+markers'),
+    )
+    
+    return fig
+
+def create_historical_chart(data, title):
+    """Create premium historical price chart"""
+    
+    fig = go.Figure()
+    
+    # Area fill with gradient effect
+    fig.add_trace(go.Scatter(
+        x=data['date'], y=data['price'],
+        fill='tozeroy',
+        fillcolor='rgba(139, 92, 246, 0.15)',
+        line=dict(color='#8b5cf6', width=3, shape='spline'),
+        name='Historical Price',
+        hovertemplate='<b>%{x|%b %d, %Y}</b><br>💰 $%{y:.2f}<extra></extra>'
+    ))
+    
+    # Moving average
+    ma_7 = data['price'].rolling(window=7).mean()
+    fig.add_trace(go.Scatter(
+        x=data['date'], y=ma_7,
+        mode='lines',
+        name='7-Day Average',
+        line=dict(color='#06b6d4', width=2, dash='dot'),
+        hovertemplate='<b>%{x|%b %d}</b><br>📊 Avg: $%{y:.2f}<extra></extra>'
+    ))
+    
+    fig.update_layout(
+        title=dict(text=f"<b>{title}</b>", font=dict(size=18, family='Poppins'), x=0.5),
+        xaxis=dict(title="Date", showgrid=True, gridcolor='rgba(0,0,0,0.05)'),
+        yaxis=dict(title="Price (USD)", showgrid=True, gridcolor='rgba(0,0,0,0.05)', tickprefix="$"),
         plot_bgcolor='rgba(0,0,0,0)',
         paper_bgcolor='rgba(0,0,0,0)',
         height=400,
@@ -507,136 +975,316 @@ def create_animated_chart(dates, prices, title, current_price=None, chart_type="
     
     return fig
 
-def create_gauge_chart(value, title, min_val=0, max_val=200):
-    """Create animated gauge chart for price indicator"""
-    fig = go.Figure(go.Indicator(
-        mode="gauge+number+delta",
-        value=value,
-        domain={'x': [0, 1], 'y': [0, 1]},
-        title={'text': title, 'font': {'size': 16, 'color': '#1a1a2e'}},
-        number={'prefix': "$", 'font': {'size': 36, 'color': '#667eea'}},
-        gauge={
-            'axis': {'range': [min_val, max_val], 'tickwidth': 1, 'tickcolor': "#667eea"},
-            'bar': {'color': "#667eea"},
-            'bgcolor': "white",
-            'borderwidth': 2,
-            'bordercolor': "#e5e7eb",
-            'steps': [
-                {'range': [min_val, max_val*0.33], 'color': '#d1fae5'},
-                {'range': [max_val*0.33, max_val*0.66], 'color': '#fef3c7'},
-                {'range': [max_val*0.66, max_val], 'color': '#fee2e2'}
-            ],
-            'threshold': {
-                'line': {'color': "#ef4444", 'width': 4},
-                'thickness': 0.75,
-                'value': value
-            }
-        }
-    ))
+def create_day_analysis_chart(data):
+    """Create day-of-week price analysis chart"""
     
-    fig.update_layout(
-        height=250,
-        margin=dict(l=20, r=20, t=50, b=20),
-        paper_bgcolor='rgba(0,0,0,0)'
-    )
+    day_order = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+    day_avg = data.groupby('day_of_week')['price'].mean().reindex(day_order)
     
-    return fig
-
-def create_comparison_chart(current, predicted, labels):
-    """Create animated bar comparison chart"""
-    colors = ['#667eea', '#764ba2']
+    colors = ['#6366f1' if i < 5 else '#8b5cf6' for i in range(7)]
     
     fig = go.Figure(data=[
-        go.Bar(name='Current', x=labels, y=current, marker_color=colors[0],
-               text=[f'${v:.0f}' for v in current], textposition='auto'),
-        go.Bar(name='Predicted', x=labels, y=predicted, marker_color=colors[1],
-               text=[f'${v:.0f}' for v in predicted], textposition='auto')
+        go.Bar(
+            x=day_avg.index,
+            y=day_avg.values,
+            marker=dict(
+                color=colors,
+                line=dict(width=0),
+                cornerradius=8
+            ),
+            text=[f'${v:.0f}' for v in day_avg.values],
+            textposition='outside',
+            textfont=dict(size=12, family='Inter', color='#64748b'),
+            hovertemplate='<b>%{x}</b><br>Average: $%{y:.2f}<extra></extra>'
+        )
     ])
     
     fig.update_layout(
-        barmode='group',
-        title=dict(text='Price Comparison', font=dict(size=18)),
-        height=300,
-        paper_bgcolor='rgba(0,0,0,0)',
+        title=dict(text="<b>Price by Day of Week</b>", font=dict(size=16, family='Poppins'), x=0.5),
+        xaxis=dict(title="", tickfont=dict(size=11)),
+        yaxis=dict(title="Average Price", tickprefix="$", showgrid=True, gridcolor='rgba(0,0,0,0.05)'),
         plot_bgcolor='rgba(0,0,0,0)',
-        showlegend=True,
-        legend=dict(orientation="h", yanchor="bottom", y=1.02)
+        paper_bgcolor='rgba(0,0,0,0)',
+        height=350,
+        margin=dict(l=60, r=30, t=60, b=50),
+        bargap=0.3
     )
     
     return fig
 
-def get_recommendation_html(recommendation_data):
-    """Generate animated recommendation HTML"""
-    rec = recommendation_data['recommendation']
+def create_season_chart(data):
+    """Create seasonal price analysis chart"""
     
-    if "BOOK NOW" in rec:
-        style_class = "book-now"
-        icon = "🔥"
-        action = "BOOK NOW"
-    elif "WAIT" in rec:
-        style_class = "wait"
-        icon = "⏳"
-        action = "WAIT"
-    else:
-        style_class = "neutral"
-        icon = "🤔"
-        action = "NEUTRAL"
+    season_avg = data.groupby('season')['price'].agg(['mean', 'min', 'max']).reset_index()
+    season_order = ['Spring', 'Summer', 'Fall', 'Winter']
+    season_avg['season'] = pd.Categorical(season_avg['season'], categories=season_order, ordered=True)
+    season_avg = season_avg.sort_values('season')
     
-    confidence = recommendation_data['confidence']
-    conf_class = f"confidence-{confidence.lower()}"
+    colors = {'Spring': '#10b981', 'Summer': '#f59e0b', 'Fall': '#8b5cf6', 'Winter': '#06b6d4'}
     
-    html = f"""
-    <div class="recommendation-box {style_class}">
-        <span style="font-size: 3rem;">{icon}</span>
-        <div style="margin-top: 0.5rem;">{action}</div>
-        <div class="confidence-badge {conf_class}">
-            {confidence} Confidence
+    fig = go.Figure()
+    
+    for _, row in season_avg.iterrows():
+        fig.add_trace(go.Bar(
+            x=[row['season']],
+            y=[row['mean']],
+            name=row['season'],
+            marker_color=colors[row['season']],
+            text=f"${row['mean']:.0f}",
+            textposition='outside',
+            hovertemplate=f"<b>{row['season']}</b><br>Avg: ${row['mean']:.0f}<br>Min: ${row['min']:.0f}<br>Max: ${row['max']:.0f}<extra></extra>"
+        ))
+    
+    fig.update_layout(
+        title=dict(text="<b>Seasonal Price Trends</b>", font=dict(size=16, family='Poppins'), x=0.5),
+        xaxis=dict(title=""),
+        yaxis=dict(title="Average Price", tickprefix="$", showgrid=True, gridcolor='rgba(0,0,0,0.05)'),
+        plot_bgcolor='rgba(0,0,0,0)',
+        paper_bgcolor='rgba(0,0,0,0)',
+        height=350,
+        showlegend=False,
+        bargap=0.4
+    )
+    
+    return fig
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# HTML COMPONENT GENERATORS
+# ═══════════════════════════════════════════════════════════════════════════════
+def render_hero():
+    """Render premium hero section"""
+    return """
+    <div class="hero-container">
+        <div class="hero-badge">🚀 AI-Powered Price Intelligence</div>
+        <h1 class="hero-title">PriceWise AI</h1>
+        <p class="hero-subtitle">Enterprise-grade price forecasting for smarter travel decisions</p>
+        <div class="hero-stats">
+            <div class="hero-stat">
+                <div class="hero-stat-value">76.6%</div>
+                <div class="hero-stat-label">Accuracy</div>
+            </div>
+            <div class="hero-stat">
+                <div class="hero-stat-value">2,192</div>
+                <div class="hero-stat-label">Data Points</div>
+            </div>
+            <div class="hero-stat">
+                <div class="hero-stat-value">&lt;1s</div>
+                <div class="hero-stat-label">Response</div>
+            </div>
         </div>
     </div>
     """
-    return html
 
-def render_metric_card(label, value, delta=None, delta_type="neutral"):
-    """Render animated metric card"""
+def render_metric_card(icon, label, value, delta=None, delta_type="neutral", icon_class="primary"):
+    """Render premium metric card"""
     delta_html = ""
     if delta:
-        delta_class = f"delta-{delta_type}"
-        delta_icon = "↑" if delta_type == "positive" else "↓" if delta_type == "negative" else "→"
-        delta_html = f'<div class="metric-delta {delta_class}">{delta_icon} {delta}</div>'
+        delta_class = f"delta-{'up' if delta_type == 'up' else 'down' if delta_type == 'down' else 'neutral'}"
+        arrow = "↑" if delta_type == "up" else "↓" if delta_type == "down" else "→"
+        delta_html = f'<div class="metric-delta {delta_class}">{arrow} {delta}</div>'
     
     return f"""
     <div class="metric-card">
+        <div class="metric-icon metric-icon-{icon_class}">{icon}</div>
         <div class="metric-label">{label}</div>
         <div class="metric-value">{value}</div>
         {delta_html}
     </div>
     """
 
-def render_feature_card(icon, title, description):
-    """Render feature card with animation"""
+def render_recommendation(rec_type, confidence, reason):
+    """Render premium recommendation card"""
+    configs = {
+        "book": {"class": "rec-book-now", "icon": "🔥", "title": "BOOK NOW", "subtitle": "Prices are rising!"},
+        "wait": {"class": "rec-wait", "icon": "⏳", "title": "WAIT", "subtitle": "Prices will drop!"},
+        "monitor": {"class": "rec-monitor", "icon": "👀", "title": "MONITOR", "subtitle": "Prices are stable"}
+    }
+    
+    config = configs.get(rec_type, configs["monitor"])
+    conf_percent = {"High": 85, "Medium": 65, "Low": 45}.get(confidence, 65)
+    
     return f"""
-    <div class="feature-card">
-        <div class="feature-icon">{icon}</div>
-        <div class="feature-title">{title}</div>
-        <div class="feature-desc">{description}</div>
+    <div class="recommendation-container">
+        <div class="recommendation-card {config['class']}">
+            <div class="rec-icon">{config['icon']}</div>
+            <div class="rec-title">{config['title']}</div>
+            <div class="rec-subtitle">{config['subtitle']}</div>
+            <div class="confidence-meter">
+                <div class="confidence-label">AI Confidence Level</div>
+                <div class="confidence-bar">
+                    <div class="confidence-fill" style="width: {conf_percent}%;"></div>
+                </div>
+                <div class="confidence-value">{confidence} ({conf_percent}%)</div>
+            </div>
+        </div>
     </div>
     """
 
-def render_insight_card(icon, text):
+def render_ai_thinking():
+    """Render AI thinking animation"""
+    return """
+    <div class="ai-thinking">
+        <div class="ai-brain">🧠</div>
+        <div class="ai-dots">
+            <div class="ai-dot"></div>
+            <div class="ai-dot"></div>
+            <div class="ai-dot"></div>
+        </div>
+        <div class="ai-text">Analyzing price trends...</div>
+    </div>
+    """
+
+def render_insight_card(icon, title, text):
     """Render insight card"""
     return f"""
     <div class="insight-card">
-        <span class="insight-icon">{icon}</span>
-        <span class="insight-text">{text}</span>
+        <div class="insight-icon">{icon}</div>
+        <div class="insight-content">
+            <div class="insight-title">{title}</div>
+            <div class="insight-text">{text}</div>
+        </div>
     </div>
     """
 
-def main():
-    """Main application with enhanced UI/UX"""
+def render_feature_card(icon, title, desc):
+    """Render feature card"""
+    return f"""
+    <div class="feature-card">
+        <span class="feature-icon">{icon}</span>
+        <div class="feature-title">{title}</div>
+        <div class="feature-desc">{desc}</div>
+    </div>
+    """
+
+def render_why_prediction(factors):
+    """Render AI explainability section"""
+    html = """
+    <div class="glass-card" style="margin-top: 1.5rem;">
+        <h4 style="margin: 0 0 1rem 0; color: #0f172a; font-family: 'Poppins', sans-serif;">
+            🤖 Why This Prediction?
+        </h4>
+        <p style="color: #64748b; font-size: 0.9rem; margin-bottom: 1rem;">
+            Our AI analyzed multiple factors to generate this recommendation:
+        </p>
+        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem;">
+    """
     
-    # Animated Header
-    st.markdown('<h1 class="main-header">✈️ AI Price Forecaster</h1>', unsafe_allow_html=True)
-    st.markdown('<p class="sub-header">Smart predictions for smarter travel decisions • Powered by Machine Learning</p>', unsafe_allow_html=True)
+    for factor in factors:
+        impact_color = "#10b981" if factor['impact'] == 'positive' else "#ef4444" if factor['impact'] == 'negative' else "#f59e0b"
+        html += f"""
+        <div style="display: flex; align-items: center; gap: 0.8rem; padding: 0.8rem; background: #f8fafc; border-radius: 12px;">
+            <span style="font-size: 1.5rem;">{factor['icon']}</span>
+            <div>
+                <div style="font-weight: 600; color: #0f172a; font-size: 0.9rem;">{factor['name']}</div>
+                <div style="color: {impact_color}; font-size: 0.8rem; font-weight: 500;">{factor['value']}</div>
+            </div>
+        </div>
+        """
+    
+    html += "</div></div>"
+    return html
+
+def render_footer():
+    """Render premium footer"""
+    return """
+    <div class="footer">
+        <div class="footer-brand">🌐 PriceWise AI</div>
+        <div class="footer-tagline">Enterprise-grade price intelligence for smarter travel</div>
+        <div class="footer-tech">
+            <span class="footer-tech-item">🐍 Python</span>
+            <span class="footer-tech-item">🤖 Scikit-learn</span>
+            <span class="footer-tech-item">📊 Plotly</span>
+            <span class="footer-tech-item">🎨 Streamlit</span>
+            <span class="footer-tech-item">📈 Pandas</span>
+        </div>
+        <div class="footer-credits">
+            🏆 Built for Puduvai Youth Fest 2026 AI Hackathon<br>
+            <span style="font-size: 0.75rem; color: #94a3b8;">Empowering travelers with AI-driven insights</span>
+        </div>
+    </div>
+    """
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# SIDEBAR COMPONENT
+# ═══════════════════════════════════════════════════════════════════════════════
+def render_sidebar():
+    """Render premium sidebar"""
+    with st.sidebar:
+        # Brand header
+        st.markdown("""
+        <div class="sidebar-header">
+            <div class="sidebar-logo">🌐</div>
+            <div class="sidebar-brand">PriceWise AI</div>
+            <div class="sidebar-tagline">Smart Travel Forecasting</div>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        st.markdown("---")
+        
+        # Service Selection
+        st.markdown('<div class="sidebar-section-title">🎯 SERVICE TYPE</div>', unsafe_allow_html=True)
+        service_type = st.selectbox(
+            "Select Service",
+            ["🏨 Hotel", "✈️ Flight"],
+            label_visibility="collapsed"
+        )
+        
+        st.markdown("")
+        
+        # Date Selection
+        st.markdown('<div class="sidebar-section-title">📅 TRAVEL DATE</div>', unsafe_allow_html=True)
+        min_date = datetime.now().date()
+        max_date = min_date + timedelta(days=365)
+        selected_date = st.date_input(
+            "Select Date",
+            value=min_date + timedelta(days=7),
+            min_value=min_date,
+            max_value=max_date,
+            label_visibility="collapsed"
+        )
+        
+        st.markdown("")
+        
+        # Forecast Period
+        st.markdown('<div class="sidebar-section-title">🔮 FORECAST PERIOD</div>', unsafe_allow_html=True)
+        prediction_days = st.slider(
+            "Days ahead",
+            min_value=3,
+            max_value=30,
+            value=7,
+            label_visibility="collapsed"
+        )
+        
+        st.markdown("---")
+        
+        # Model Stats
+        st.markdown("""
+        <div style="padding: 1rem; background: rgba(99, 102, 241, 0.1); border-radius: 12px; margin: 1rem 0;">
+            <div style="color: #a5b4fc; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.8rem;">
+                📊 Model Performance
+            </div>
+            <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                <span style="color: #94a3b8; font-size: 0.85rem;">Accuracy</span>
+                <span style="color: #10b981; font-weight: 600;">76.6%</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                <span style="color: #94a3b8; font-size: 0.85rem;">Avg Error</span>
+                <span style="color: #06b6d4; font-weight: 600;">$12.68</span>
+            </div>
+            <div style="display: flex; justify-content: space-between;">
+                <span style="color: #94a3b8; font-size: 0.85rem;">Data Points</span>
+                <span style="color: #8b5cf6; font-weight: 600;">2,192</span>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        return service_type, selected_date, prediction_days
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# MAIN APPLICATION
+# ═══════════════════════════════════════════════════════════════════════════════
+def main():
+    """Main application entry point"""
     
     # Load data and models
     hotel_data, flight_data = load_data()
@@ -647,79 +1295,25 @@ def main():
         st.code("python data_generator.py\npython model.py", language="bash")
         st.stop()
     
-    # Sidebar with professional styling
-    with st.sidebar:
-        st.markdown("## 🎯 Prediction Settings")
-        st.markdown("---")
-        
-        # Service type with icons
-        service_type = st.selectbox(
-            "🏷️ Service Type",
-            ["🏨 Hotel", "✈️ Flight"],
-            help="Choose between hotel or flight price prediction"
-        )
-        
-        st.markdown("")
-        
-        # Date selection
-        min_date = datetime.now().date()
-        max_date = min_date + timedelta(days=365)
-        
-        selected_date = st.date_input(
-            "📅 Travel Date",
-            value=min_date + timedelta(days=7),
-            min_value=min_date,
-            max_value=max_date,
-            help="Select your intended travel date"
-        )
-        
-        st.markdown("")
-        
-        # Prediction horizon with visual feedback
-        prediction_days = st.slider(
-            "🔮 Forecast Period",
-            min_value=3,
-            max_value=30,
-            value=7,
-            help="Number of days to forecast ahead"
-        )
-        
-        st.markdown("---")
-        
-        # Quick stats in sidebar
-        st.markdown("### 📊 Model Stats")
-        st.markdown("""
-        <div style="color: #a0a0a0; font-size: 0.85rem;">
-            <p>🎯 Hotel Accuracy: <b style="color: #4ecdc4;">76.6%</b></p>
-            <p>📉 Avg Error: <b style="color: #4ecdc4;">$12.68</b></p>
-            <p>📈 Data Points: <b style="color: #4ecdc4;">2,192</b></p>
-        </div>
-        """, unsafe_allow_html=True)
-        
-        st.markdown("---")
-        st.markdown("""
-        <div style="text-align: center; color: #6b7280; font-size: 0.8rem;">
-            <p>🏆 Puduvai Youth Fest 2026</p>
-            <p>AI Hackathon Project</p>
-        </div>
-        """, unsafe_allow_html=True)
-
-    # Main content area
+    # Render sidebar and get selections
+    service_type, selected_date, prediction_days = render_sidebar()
+    
+    # Hero Section
+    st.markdown(render_hero(), unsafe_allow_html=True)
+    
     # Select appropriate data and model
     if "Hotel" in service_type:
         data = hotel_data
         model = hotel_model
-        service_icon = "🏨"
         service_name = "Hotel"
-        price_range = (50, 300)
+        service_icon = "🏨"
     else:
         data = flight_data
         model = flight_model
-        service_icon = "✈️"
         service_name = "Flight"
-        price_range = (150, 600)
+        service_icon = "✈️"
     
-    # Create current data for prediction
+    # Create prediction data
     current_date = datetime.now().date()
     current_data = pd.DataFrame([{
         'date': current_date,
@@ -737,201 +1331,176 @@ def main():
         future_dates, future_prices = model.predict_future_trend(current_date, days_ahead=prediction_days)
         recommendation_data = model.get_recommendation(current_price, future_prices)
         
-        # Main layout with tabs
-        tab1, tab2, tab3 = st.tabs(["📊 Forecast", "📈 Analytics", "💡 Insights"])
+        # Determine recommendation type
+        if recommendation_data['price_change_percent'] > 5:
+            rec_type = "book"
+        elif recommendation_data['price_change_percent'] < -5:
+            rec_type = "wait"
+        else:
+            rec_type = "monitor"
         
+        # ═══════════════════════════════════════════════════════════════════
+        # MAIN CONTENT TABS
+        # ═══════════════════════════════════════════════════════════════════
+        tab1, tab2, tab3, tab4 = st.tabs([
+            "📊 Forecast",
+            "📈 Analytics", 
+            "🤖 AI Insights",
+            "💡 Tips"
+        ])
+        
+        # ═══════════════════════════════════════════════════════════════════
+        # TAB 1: FORECAST
+        # ═══════════════════════════════════════════════════════════════════
         with tab1:
-            # Top metrics row
+            # Metrics Row
             col1, col2, col3, col4 = st.columns(4)
             
             with col1:
-                delta_type = "positive" if recommendation_data['price_change_percent'] > 0 else "negative"
+                delta_type = "up" if recommendation_data['price_change_percent'] > 0 else "down"
                 st.markdown(render_metric_card(
-                    "Current Price",
-                    f"${current_price:.2f}",
+                    "💰", "Current Price", f"${current_price:.2f}",
                     f"{abs(recommendation_data['price_change_percent']):.1f}%",
-                    delta_type
+                    delta_type, "primary"
                 ), unsafe_allow_html=True)
             
             with col2:
                 st.markdown(render_metric_card(
-                    "Predicted Avg",
-                    f"${recommendation_data['predicted_avg_price']:.2f}"
+                    "📊", "Predicted Avg", f"${recommendation_data['predicted_avg_price']:.2f}",
+                    icon_class="secondary"
                 ), unsafe_allow_html=True)
             
             with col3:
-                min_future = min(future_prices)
                 st.markdown(render_metric_card(
-                    "Lowest Expected",
-                    f"${min_future:.2f}"
+                    "📉", "Lowest Expected", f"${min(future_prices):.2f}",
+                    icon_class="success"
                 ), unsafe_allow_html=True)
             
             with col4:
-                max_future = max(future_prices)
                 st.markdown(render_metric_card(
-                    "Highest Expected",
-                    f"${max_future:.2f}"
+                    "📈", "Highest Expected", f"${max(future_prices):.2f}",
+                    icon_class="danger"
                 ), unsafe_allow_html=True)
             
             st.markdown("<br>", unsafe_allow_html=True)
             
-            # Main content columns
+            # Main content
             chart_col, rec_col = st.columns([2, 1])
             
             with chart_col:
-                st.markdown(f"### {service_icon} {service_name} Price Forecast")
-                
-                # Forecast chart
                 all_dates = [current_date] + future_dates
                 all_prices = [current_price] + list(future_prices)
                 
-                forecast_chart = create_animated_chart(
-                    all_dates, all_prices,
-                    f"{prediction_days}-Day Price Forecast",
-                    current_price,
-                    "forecast"
+                forecast_chart = create_premium_forecast_chart(
+                    all_dates, all_prices, current_price,
+                    f"{service_icon} {service_name} Price Forecast ({prediction_days} Days)"
                 )
                 st.plotly_chart(forecast_chart, use_container_width=True)
             
             with rec_col:
-                st.markdown("### 🎯 AI Recommendation")
-                st.markdown(get_recommendation_html(recommendation_data), unsafe_allow_html=True)
+                st.markdown(render_recommendation(
+                    rec_type,
+                    recommendation_data['confidence'],
+                    recommendation_data['reason']
+                ), unsafe_allow_html=True)
                 
-                # Recommendation details
-                st.markdown("#### 📋 Analysis")
-                st.markdown(f"""
-                <div class="glass-card" style="padding: 1rem;">
-                    <p><strong>📊 Trend:</strong> {recommendation_data['reason']}</p>
-                    <p><strong>💰 Current:</strong> ${recommendation_data['current_price']:.2f}</p>
-                    <p><strong>📈 Predicted:</strong> ${recommendation_data['predicted_avg_price']:.2f}</p>
-                    <p><strong>📉 Change:</strong> {recommendation_data['price_change_percent']:.1f}%</p>
-                </div>
-                """, unsafe_allow_html=True)
-                
-                # Savings/Cost indicator
-                if recommendation_data['price_change_percent'] < -5:
+                # Savings indicator
+                if rec_type == "wait":
                     savings = current_price - recommendation_data['predicted_avg_price']
                     st.success(f"💰 Potential Savings: **${savings:.2f}**")
-                elif recommendation_data['price_change_percent'] > 5:
+                elif rec_type == "book":
                     extra = recommendation_data['predicted_avg_price'] - current_price
                     st.warning(f"⚠️ Book now to save: **${extra:.2f}**")
 
+        # ═══════════════════════════════════════════════════════════════════
+        # TAB 2: ANALYTICS
+        # ═══════════════════════════════════════════════════════════════════
         with tab2:
-            st.markdown("### 📈 Historical Analysis")
+            st.markdown("### 📈 Historical Price Analysis")
             
-            # Historical data visualization
-            recent_data = data.tail(90)
+            # Historical chart
+            recent_data = data.tail(90).copy()
+            hist_chart = create_historical_chart(recent_data, f"{service_name} Prices (Last 90 Days)")
+            st.plotly_chart(hist_chart, use_container_width=True)
             
-            hist_col1, hist_col2 = st.columns([2, 1])
+            # Analysis charts
+            col1, col2 = st.columns(2)
             
-            with hist_col1:
-                historical_chart = create_animated_chart(
-                    recent_data['date'],
-                    recent_data['price'],
-                    f"Historical {service_name} Prices (Last 90 Days)",
-                    chart_type="historical"
-                )
-                st.plotly_chart(historical_chart, use_container_width=True)
+            with col1:
+                day_chart = create_day_analysis_chart(data)
+                st.plotly_chart(day_chart, use_container_width=True)
             
-            with hist_col2:
-                # Price gauge
-                gauge = create_gauge_chart(
-                    current_price,
-                    "Current Price Level",
-                    price_range[0],
-                    price_range[1]
-                )
-                st.plotly_chart(gauge, use_container_width=True)
+            with col2:
+                season_chart = create_season_chart(data)
+                st.plotly_chart(season_chart, use_container_width=True)
             
-            # Statistics cards
+            # Statistics
             st.markdown("### 📊 Price Statistics")
             
-            stat_cols = st.columns(4)
+            stats_cols = st.columns(4)
             price_stats = data['price'].describe()
             
             stats_data = [
-                ("Average", f"${price_stats['mean']:.2f}", "📊"),
-                ("Minimum", f"${price_stats['min']:.2f}", "📉"),
-                ("Maximum", f"${price_stats['max']:.2f}", "📈"),
-                ("Std Dev", f"${price_stats['std']:.2f}", "📐")
+                ("📊", "Average", f"${price_stats['mean']:.2f}", "primary"),
+                ("📉", "Minimum", f"${price_stats['min']:.2f}", "success"),
+                ("📈", "Maximum", f"${price_stats['max']:.2f}", "danger"),
+                ("📐", "Std Dev", f"${price_stats['std']:.2f}", "warning")
             ]
             
-            for col, (label, value, icon) in zip(stat_cols, stats_data):
+            for col, (icon, label, value, icon_class) in zip(stats_cols, stats_data):
                 with col:
-                    st.markdown(f"""
-                    <div class="metric-card">
-                        <div style="font-size: 2rem;">{icon}</div>
-                        <div class="metric-label">{label}</div>
-                        <div class="metric-value" style="font-size: 1.8rem;">{value}</div>
-                    </div>
-                    """, unsafe_allow_html=True)
-            
-            # Day of week analysis
-            st.markdown("### 📅 Price by Day of Week")
-            
-            day_avg = data.groupby('day_of_week')['price'].mean().reindex([
-                'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'
-            ])
-            
-            day_chart = go.Figure(data=[
-                go.Bar(
-                    x=day_avg.index,
-                    y=day_avg.values,
-                    marker_color=['#667eea' if i < 5 else '#764ba2' for i in range(7)],
-                    text=[f'${v:.0f}' for v in day_avg.values],
-                    textposition='auto'
-                )
-            ])
-            
-            day_chart.update_layout(
-                height=300,
-                paper_bgcolor='rgba(0,0,0,0)',
-                plot_bgcolor='rgba(0,0,0,0)',
-                xaxis=dict(title="Day of Week"),
-                yaxis=dict(title="Average Price ($)", tickprefix="$")
-            )
-            
-            st.plotly_chart(day_chart, use_container_width=True)
-
+                    st.markdown(render_metric_card(icon, label, value, icon_class=icon_class), unsafe_allow_html=True)
+        
+        # ═══════════════════════════════════════════════════════════════════
+        # TAB 3: AI INSIGHTS
+        # ═══════════════════════════════════════════════════════════════════
         with tab3:
-            st.markdown("### 💡 AI-Powered Insights")
+            st.markdown("### 🤖 AI-Powered Insights")
             
-            # Dynamic insights based on data
-            insights = []
-            
-            # Weekend insight
+            # Why this prediction
             weekend_avg = data[data['is_weekend'] == 1]['price'].mean()
             weekday_avg = data[data['is_weekend'] == 0]['price'].mean()
             weekend_diff = ((weekend_avg - weekday_avg) / weekday_avg) * 100
             
-            if weekend_diff > 10:
-                insights.append(("💰", f"Weekends are {weekend_diff:.0f}% more expensive. Consider weekday travel!"))
+            factors = [
+                {"icon": "📅", "name": "Day Type", "value": f"{'Weekend' if current_date.weekday() >= 5 else 'Weekday'} pricing", "impact": "neutral"},
+                {"icon": "🌡️", "name": "Season", "value": f"{model._get_season(current_date.month)} demand", "impact": "positive" if current_date.month in [6,7,8,12] else "neutral"},
+                {"icon": "📈", "name": "Trend", "value": f"{recommendation_data['price_change_percent']:.1f}% expected change", "impact": "negative" if recommendation_data['price_change_percent'] > 0 else "positive"},
+                {"icon": "⏰", "name": "Timing", "value": f"{prediction_days} days forecast window", "impact": "neutral"}
+            ]
             
-            # Season insight
+            st.markdown(render_why_prediction(factors), unsafe_allow_html=True)
+            
+            # Dynamic insights
+            st.markdown("### 💡 Smart Insights")
+            
+            insights = []
+            
+            if weekend_diff > 10:
+                insights.append(("💰", "Weekend Premium", f"Weekends are {weekend_diff:.0f}% more expensive. Consider weekday travel for savings!"))
+            
             season_avg = data.groupby('season')['price'].mean()
             cheapest_season = season_avg.idxmin()
-            insights.append(("🌸", f"{cheapest_season} offers the best prices on average (${season_avg[cheapest_season]:.0f})"))
+            insights.append(("🌸", "Best Season", f"{cheapest_season} offers the lowest average prices at ${season_avg[cheapest_season]:.0f}"))
             
-            # Current vs average
             avg_price = data['price'].mean()
             if current_price < avg_price * 0.9:
-                insights.append(("🎯", f"Current price is {((avg_price - current_price)/avg_price)*100:.0f}% below average - great deal!"))
+                insights.append(("🎯", "Great Deal!", f"Current price is {((avg_price - current_price)/avg_price)*100:.0f}% below average - excellent value!"))
             elif current_price > avg_price * 1.1:
-                insights.append(("⚠️", f"Current price is {((current_price - avg_price)/avg_price)*100:.0f}% above average"))
+                insights.append(("⚠️", "Above Average", f"Current price is {((current_price - avg_price)/avg_price)*100:.0f}% above average"))
             
-            # Trend insight
             if recommendation_data['price_change_percent'] > 5:
-                insights.append(("📈", "Prices trending upward - booking soon recommended"))
+                insights.append(("📈", "Rising Trend", "Prices are trending upward - booking soon is recommended"))
             elif recommendation_data['price_change_percent'] < -5:
-                insights.append(("📉", "Prices trending downward - waiting could save money"))
+                insights.append(("📉", "Falling Trend", "Prices are trending downward - waiting could save you money"))
             
-            # Display insights
-            for icon, text in insights:
-                st.markdown(render_insight_card(icon, text), unsafe_allow_html=True)
-            
-            st.markdown("<br>", unsafe_allow_html=True)
-            
-            # Tips section
+            for icon, title, text in insights:
+                st.markdown(render_insight_card(icon, title, text), unsafe_allow_html=True)
+
+        # ═══════════════════════════════════════════════════════════════════
+        # TAB 4: TIPS
+        # ═══════════════════════════════════════════════════════════════════
+        with tab4:
             st.markdown("### 🎓 Smart Booking Tips")
             
             tips_col1, tips_col2, tips_col3 = st.columns(3)
@@ -940,64 +1509,110 @@ def main():
                 st.markdown(render_feature_card(
                     "📅",
                     "Best Booking Time",
-                    "Book 2-3 weeks ahead for hotels, 6-8 weeks for flights"
+                    "Book hotels 2-3 weeks ahead, flights 6-8 weeks for optimal prices"
                 ), unsafe_allow_html=True)
             
             with tips_col2:
                 st.markdown(render_feature_card(
-                    "💡",
-                    "Flexible Dates",
-                    "Being flexible with dates can save up to 30%"
+                    "🔄",
+                    "Be Flexible",
+                    "Flexible dates can save up to 30% on your bookings"
                 ), unsafe_allow_html=True)
             
             with tips_col3:
                 st.markdown(render_feature_card(
                     "🔔",
-                    "Price Alerts",
-                    "Set alerts to catch price drops automatically"
+                    "Set Alerts",
+                    "Use price alerts to catch sudden drops automatically"
                 ), unsafe_allow_html=True)
             
             st.markdown("<br>", unsafe_allow_html=True)
             
-            # How it works section
+            tips_col4, tips_col5, tips_col6 = st.columns(3)
+            
+            with tips_col4:
+                st.markdown(render_feature_card(
+                    "📊",
+                    "Compare Options",
+                    "Always compare multiple dates and providers"
+                ), unsafe_allow_html=True)
+            
+            with tips_col5:
+                st.markdown(render_feature_card(
+                    "🌙",
+                    "Off-Peak Travel",
+                    "Midweek flights and stays are typically cheaper"
+                ), unsafe_allow_html=True)
+            
+            with tips_col6:
+                st.markdown(render_feature_card(
+                    "🎯",
+                    "Book Direct",
+                    "Sometimes booking direct offers better cancellation policies"
+                ), unsafe_allow_html=True)
+            
+            st.markdown("<br>", unsafe_allow_html=True)
+            
+            # How it works
             st.markdown("### 🤖 How Our AI Works")
             
             how_cols = st.columns(4)
             
             steps = [
-                ("1️⃣", "Data Collection", "Analyze historical price patterns"),
-                ("2️⃣", "Feature Analysis", "Extract seasonal & demand trends"),
-                ("3️⃣", "ML Prediction", "Linear Regression forecasting"),
-                ("4️⃣", "Smart Advice", "Generate actionable recommendations")
+                ("1️⃣", "Data Collection", "Analyze 2+ years of historical price patterns"),
+                ("2️⃣", "Feature Analysis", "Extract seasonal, weekly, and demand trends"),
+                ("3️⃣", "ML Prediction", "Apply Linear Regression forecasting model"),
+                ("4️⃣", "Smart Advice", "Generate actionable booking recommendations")
             ]
             
             for col, (num, title, desc) in zip(how_cols, steps):
                 with col:
                     st.markdown(render_feature_card(num, title, desc), unsafe_allow_html=True)
+            
+            st.markdown("<br>", unsafe_allow_html=True)
+            
+            # Social Impact
+            st.markdown("### 🌍 Social Impact")
+            
+            impact_col1, impact_col2 = st.columns(2)
+            
+            with impact_col1:
+                st.markdown("""
+                <div class="glass-card">
+                    <h4 style="color: #0f172a; margin-bottom: 1rem;">💚 How We Help</h4>
+                    <ul style="color: #64748b; line-height: 2;">
+                        <li><strong>Cost-Efficient Travel:</strong> Save 10-20% on bookings</li>
+                        <li><strong>Democratized AI:</strong> Enterprise tools for everyone</li>
+                        <li><strong>Smart Decisions:</strong> Data-driven travel planning</li>
+                        <li><strong>Sustainable Tourism:</strong> Optimized travel reduces waste</li>
+                    </ul>
+                </div>
+                """, unsafe_allow_html=True)
+            
+            with impact_col2:
+                st.markdown("""
+                <div class="glass-card">
+                    <h4 style="color: #0f172a; margin-bottom: 1rem;">🎯 Our Mission</h4>
+                    <p style="color: #64748b; line-height: 1.8;">
+                        We believe everyone deserves access to intelligent travel planning tools. 
+                        Our AI-powered platform democratizes price intelligence, helping travelers 
+                        make informed decisions and save money on their journeys.
+                    </p>
+                    <p style="color: #6366f1; font-weight: 600; margin-top: 1rem;">
+                        #impact4globalgoals 🌐
+                    </p>
+                </div>
+                """, unsafe_allow_html=True)
     
     except Exception as e:
         st.error(f"⚠️ Prediction error: {str(e)}")
         st.info("Please ensure all data and models are properly loaded.")
-
+    
     # Footer
-    st.markdown("---")
-    st.markdown("""
-    <div class="footer">
-        <div class="footer-brand">✈️ AI Price Forecaster</div>
-        <p style="margin-top: 0.5rem;">Helping travelers make smarter decisions with AI</p>
-        <p style="font-size: 0.8rem; margin-top: 1rem;">
-            🏆 Built for Puduvai Youth Fest 2026 AI Hackathon<br>
-            💻 Powered by Python, Streamlit & Machine Learning
-        </p>
-        <div style="margin-top: 1rem;">
-            <span style="margin: 0 0.5rem;">🐍 Python</span>
-            <span style="margin: 0 0.5rem;">📊 Pandas</span>
-            <span style="margin: 0 0.5rem;">🤖 Scikit-learn</span>
-            <span style="margin: 0 0.5rem;">📈 Plotly</span>
-            <span style="margin: 0 0.5rem;">🎨 Streamlit</span>
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
+    st.markdown(render_footer(), unsafe_allow_html=True)
 
+# ═══════════════════════════════════════════════════════════════════════════════
+# APPLICATION ENTRY POINT
+# ═══════════════════════════════════════════════════════════════════════════════
 if __name__ == "__main__":
     main()
